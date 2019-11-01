@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>
+    Username/password card generator
+</title>
+<style>
+    @page {
+        size: A4;
+    }
+
+    @media print {
+        .no-print {
+            display: none;
+        }
+    }
+
+    #cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .card {
+        margin: 5px;
+        padding: 5px;
+    }
+</style>
+</head>
+<body>
+<div class="no-print">
+    <h1>Username/password card generator</h1>
+    <label for="numCards">Number of cards</label> <input id="numCards" value="200">
+    <label for="syllables">Syllables</label>      <input id="syllables" value="4">
+</div>
+<div id="cards">
+</div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.11/chance.min.js"></script>
+
+<script>
+const cardList = document.getElementById('cards');
+const cardInput = document.getElementById('numCards');
+const syllableInput = document.getElementById('syllables');
+const maxCards = 1000;
+
+function makeCredentials(event) {
+    cardList.innerHTML = "";
+    const usernames = [];
+    const passwords = [];
+
+    const numCards = Math.min(cardInput.value, maxCards);
+    const syllables = Math.min(syllableInput.value, 12);
+
+    for (let i = 0; i < numCards; i++) {
+        let cardElement = document.createElement('div');
+        cardElement.classList.add("card");
+
+        let username = chance.word({ syllables: syllables });
+        let password = chance.word({ syllables: syllables });
+
+        let usernameElement = document.createElement('p');
+        let passwordElement = document.createElement('p');
+        usernameElement.innerHTML = `<strong>Username</strong>:  ${username}`;
+        passwordElement.innerHTML = `<strong>Password</strong>:  ${password}`;
+
+        cardElement.appendChild(usernameElement);
+        cardElement.appendChild(passwordElement);
+        cardList.appendChild(cardElement);
+    }
+}
+cardInput.addEventListener('input', makeCredentials);
+syllableInput.addEventListener('input', makeCredentials);
+makeCredentials();
+</script>
+</html>
